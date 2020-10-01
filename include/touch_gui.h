@@ -2,15 +2,21 @@
 #include <vector>
 #include <string>
 #include "Wire.h"
+#include "ILI9488_t3.h"
+#include <URTouch.h>
+#include <cstdint>
 
 class TouchGui {
 
 public:
 
-    uint16_t ID = 1337;
-    void setup();
+    ILI9488_t3* monitor = NULL;
+    URTouch* touch = NULL;
+     
+    TouchGui();
+
+    void initializeTouchPanel();
     void getTouch();
-    void blackScreen();
 
 protected:
     

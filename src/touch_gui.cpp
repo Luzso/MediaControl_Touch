@@ -1,22 +1,48 @@
 #include "touch_gui.h"
-#include "ILI9488_t3.h"
-/*
-#define BLACK   0x0000
+#include "ili9488_t3_font_ArialBold.h"
+
+#define CS_PIN 21
+#define DC_PIN 20
+#define RST_PIN 255   
+#define SCLK_PIN 14
+#define MOSI_PIN 7
+#define MISO_PIN 12
+
+#define TCKL_PIN 0
+#define TCS_PIN 0
+#define TDIN_PIN 0
+#define DOUT_PIN 0
+#define IRQ_PIN 0
+
+#define ROTATION 3 // Horizontal
+
+TouchGui::TouchGui(){
+    
+    this->initializeTouchPanel();
+   
+}   
 
 
-void TouchGui::setup(){
-    tft.reset();
-    ID = tft.readID();
-    if (ID == 0xD3D3) ID = 0x9481; //force ID if write-only display
-    tft.begin(0x9486);
-    tft.setRotation(0);
-    tft.fillScreen(TFT_BLACK);
+void TouchGui::initializeTouchPanel(){
+    this->monitor = new ILI9488_t3(CS_PIN, DC_PIN, RST_PIN, MOSI_PIN, SCLK_PIN, MISO_PIN);
+    this->monitor->begin();
+    this->monitor->useFrameBuffer(true);
+    this->monitor->setRotation(ROTATION);
+    
+    // Test
+    this->monitor->fillScreen(ILI9488_BLUE);
+    this->monitor->drawCircle(150, 150, 50, ILI9488_DARKCYAN);
+    this->monitor->setCursor(10, 10);
+    this->monitor->setFont(Arial_12_Bold);
+    this->monitor->setTextColor(ILI9488_CYAN);
+    this->monitor->println();
+    this->monitor->println("- Hello there.");
+    this->monitor->println("- General Kenobi.");
+    this->monitor->updateScreen();
+
 }
 
 void TouchGui::getTouch()
 {
 }
 
-void TouchGui::blackScreen(){
-    tft.fillScreen(BLACK);
-}*/
