@@ -16,6 +16,11 @@
 
 #define ROTATION 3 // Horizontal
 
+#define PIXELS_X 480
+#define PIXELS_Y 320
+
+using namespace std;
+
 TouchGui::TouchGui(){
     
     this->initializeTouchPanel();
@@ -30,16 +35,34 @@ void TouchGui::initializeTouchPanel(){
     this->monitor->setRotation(ROTATION);
     
     // Test
-    this->monitor->fillScreen(ILI9488_BLUE);
-    this->monitor->drawCircle(150, 150, 50, ILI9488_DARKCYAN);
-    this->monitor->setCursor(10, 10);
-    this->monitor->setFont(Arial_12_Bold);
     this->monitor->setTextColor(ILI9488_CYAN);
-    this->monitor->println();
-    this->monitor->println("- Hello there.");
-    this->monitor->println("- General Kenobi.");
-    this->monitor->updateScreen();
 
+}
+
+void TouchGui::clearScreen(){
+
+    this->monitor->fillScreen(this->backgroundColor);
+    this->monitor->updateScreen();
+}
+
+void TouchGui::setBackgroundColor(uint16_t color){
+
+    this->backgroundColor = color;
+
+}
+
+void TouchGui::writeClearCenter(string text){
+
+    this->clearScreen();
+
+    uint8_t textSizeX = 4;
+    uint8_t textSizeY = 2;
+    this->monitor->setTextSize(textSizeX, textSizeY);
+    this->monitor->setCursor(PIXELS_X/2 - textSizeX/2*this->monitor->getTextSize(), PIXELS_Y/2);
+
+    this->monitor->print(text.c_str());
+
+    this->monitor->updateScreen();
 }
 
 void TouchGui::getTouch()

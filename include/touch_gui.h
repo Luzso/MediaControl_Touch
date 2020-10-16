@@ -17,9 +17,17 @@ public:
 
     void initializeTouchPanel();
     void getTouch();
+    void setBackgroundColor(uint16_t color);
+    void writeClearCenter(std::string text);
+    void clearScreen();
 
 protected:
     
     PushButton playPauseBtn;
     PushButton *buttons[1] = {&playPauseBtn};
+
+private:
+
+    uint16_t backgroundColor = ILI9488_BLACK;
+
 };
