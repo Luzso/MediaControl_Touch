@@ -1,5 +1,4 @@
 #include "touch_gui.h"
-#include "ili9488_t3_font_ArialBold.h"
 
 #define CS_PIN 21
 #define DC_PIN 20
@@ -19,7 +18,6 @@
 #define PIXELS_X 480
 #define PIXELS_Y 320
 
-using namespace std;
 
 TouchGui::TouchGui(){
     
@@ -27,16 +25,15 @@ TouchGui::TouchGui(){
    
 }   
 
-
 void TouchGui::initializeTouchPanel(){
     this->monitor = new ILI9488_t3(CS_PIN, DC_PIN, RST_PIN, MOSI_PIN, SCLK_PIN, MISO_PIN);
     this->monitor->begin();
     this->monitor->useFrameBuffer(true);
+    this->monitor->setFrameBuffer(this->frame_buffer);
     this->monitor->setRotation(ROTATION);
-    
+    this->setSaveFont(Arial_24_Bold);
     // Test
     this->monitor->setTextColor(ILI9488_CYAN);
-
 }
 
 void TouchGui::clearScreen(){
@@ -45,27 +42,39 @@ void TouchGui::clearScreen(){
     this->monitor->updateScreen();
 }
 
-void TouchGui::setBackgroundColor(uint16_t color){
+void TouchGui::setDefaultBackground(uint16_t color){
 
     this->backgroundColor = color;
 
 }
 
-void TouchGui::writeClearCenter(string text){
 
-    this->clearScreen();
-
-    uint8_t textSizeX = 4;
-    uint8_t textSizeY = 2;
-    this->monitor->setTextSize(textSizeX, textSizeY);
-    this->monitor->setCursor(PIXELS_X/2 - textSizeX/2*this->monitor->getTextSize(), PIXELS_Y/2);
-
-    this->monitor->print(text.c_str());
-
-    this->monitor->updateScreen();
+void TouchGui::setSaveFont(const ILI9341_t3_font_t& font){
+    this->monitor->setFont(font);
+    this->currentFont = font;
 }
 
-void TouchGui::getTouch()
-{
+ILI9341_t3_font_t TouchGui::getFont(){
+    return this->currentFont;
+}
+
+FontSize TouchGui::getFontSize(){
+    // Parse the font 
+    FontSize size;
+    size.width = this->currentFont.bits_width;
+    size.height = currentFont.cap_height;
+
+    return size;
+}
+
+void TouchGui::writeClearCenter(String text){
+
+    this->clearScreen();
+    FontSize size = this->getFontSize();
+    int numChars = text.length();
+    this->monitor->setCursor(PIXELS_X/2 - size.width*numChars / 2.0 , PIXELS_Y/2 - size.height / 2.0);
+    this->monitor->print(text);
+    this->monitor->updateScreen();
+
 }
 

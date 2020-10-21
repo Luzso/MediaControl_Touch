@@ -7,14 +7,18 @@ TouchGui* mediaPlayer;
 int i = 0;
 
 void setup(){
+
     mediaPlayer = new TouchGui();
     delay(100);
-    mediaPlayer->writeClearCenter("Hello Annaaa!");
+
+    String displayString = String("Hello Annaaa!") + String(mediaPlayer->monitor->getTextSize());
+    mediaPlayer->writeClearCenter(String("Hi there"));
 }
 
 void loop(){
-    //i++;
-    //mediaPlayer->writeClearCenter("Hello" + 1);
     //delay(1000);
+    //mediaPlayer->writeClearCenter(String("Hi"));
+
+    
 }
 
