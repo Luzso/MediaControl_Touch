@@ -3,7 +3,7 @@
 
 #define CS_PIN 21
 #define DC_PIN 20
-#define RST_PIN 255   
+#define RST_PIN 255 // 3.3V
 #define SCLK_PIN 14
 #define MOSI_PIN 7
 #define MISO_PIN 12
