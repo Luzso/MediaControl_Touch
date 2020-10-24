@@ -8,6 +8,9 @@
 #include "String.h"
 #include "ili9488_t3_font_ArialBold.h"
 
+#define PIXELS_X 480
+#define PIXELS_Y 320
+
 struct FontSize{
     int width;
     int height;
@@ -26,7 +29,7 @@ public:
 
     void initializeTouchPanel();
     void setDefaultBackground(uint16_t color);
-    void writeClearCenter(String text);
+    void writeInBox(String text, int xBound1, int xBound2, int yBound1, int yBound2, bool doCenter = false);
     void clearScreen();
     FontSize getFontSize();
     void setSaveFont(const ILI9341_t3_font_t& font);

@@ -15,8 +15,7 @@
 
 #define ROTATION 3 // Horizontal
 
-#define PIXELS_X 480
-#define PIXELS_Y 320
+#define FONT_HEIGHT_WIDTH_RATIO 1.3333f
 
 
 TouchGui::TouchGui(){
@@ -31,7 +30,7 @@ void TouchGui::initializeTouchPanel(){
     this->monitor->useFrameBuffer(true);
     this->monitor->setFrameBuffer(this->frame_buffer);
     this->monitor->setRotation(ROTATION);
-    this->setSaveFont(Arial_24_Bold);
+    this->setSaveFont(Arial_12_Bold);
     // Test
     this->monitor->setTextColor(ILI9488_CYAN);
 }
@@ -67,12 +66,25 @@ FontSize TouchGui::getFontSize(){
     return size;
 }
 
-void TouchGui::writeClearCenter(String text){
+void TouchGui::writeInBox(String text, int xBound1, int xBound2, int yBound1, int yBound2, bool doCenter){
 
     this->clearScreen();
     FontSize size = this->getFontSize();
     int numChars = text.length();
-    this->monitor->setCursor(PIXELS_X/2 - size.width*numChars / 2.0 , PIXELS_Y/2 - size.height / 2.0);
+
+    int xStart = 0;
+    int yStart = 0;
+    if(doCenter){
+        int dX = xBound2 - xBound1;
+        int dY = yBound2 - yBound1;
+        xStart = dX/2 - size.height/FONT_HEIGHT_WIDTH_RATIO*numChars / 2.0;
+        yStart = dY/2 - size.height / 2.0;
+    }
+    xStart += xBound1;
+    yStart += yBound1;
+
+    monitor->setCursor(xStart, yStart);
+
     this->monitor->print(text);
     this->monitor->updateScreen();
 

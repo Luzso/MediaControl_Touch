@@ -11,14 +11,12 @@ void setup(){
     mediaPlayer = new TouchGui();
     delay(100);
 
-    String displayString = String("Hello Annaaa!") + String(mediaPlayer->monitor->getTextSize());
-    mediaPlayer->writeClearCenter(String("Hi there"));
+    String displayString = String("Hello Annaaa!!!") + mediaPlayer->getFontSize().height;
+    mediaPlayer->writeInBox(displayString, 0, PIXELS_X, 0, PIXELS_Y, true);
 }
 
 void loop(){
-    //delay(1000);
-    //mediaPlayer->writeClearCenter(String("Hi"));
-
+  
     
 }
 
