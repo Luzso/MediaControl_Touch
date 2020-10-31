@@ -1,18 +1,22 @@
 #include <Arduino.h>
-#include "touch_gui.h"
+#include "PanelGUI.h"
 
 
-TouchGui* mediaPlayer;
+PanelGUI* mediaPlayer;
 
 int i = 0;
 
 void setup(){
 
-    mediaPlayer = new TouchGui();
+    mediaPlayer = new PanelGUI();
     delay(100);
 
     String displayString = String("Hello Annaaa!!!") + mediaPlayer->getFontSize().height;
-    mediaPlayer->writeInBox(displayString, 0, PIXELS_X, 0, PIXELS_Y, true);
+    
+    mediaPlayer->clearScreen();
+    mediaPlayer->drawButtonSquare(50, 30, 75, 75, true);  
+    mediaPlayer->writeInBox_sizes(displayString, 50, 30, 100, 100, true);
+    
 }
 
 void loop(){
