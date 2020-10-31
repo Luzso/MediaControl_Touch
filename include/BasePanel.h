@@ -2,12 +2,11 @@
 #include "PanelGUI.h"
 
 
-class BasePanel : public PanelTouch, public PanelGUI{
+class BasePanel : public PanelTouch, public PanelGUI
+{
 
 public:
     BasePanel();
     
-    void performTouchCalibration(){
-        
-    }
+    void performTouchCalibration();
 };

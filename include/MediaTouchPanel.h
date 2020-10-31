@@ -1,6 +1,7 @@
 #include "BasePanel.h"
 
-class MediaTouchPanel : BasePanel{
+class MediaTouchPanel : BasePanel
+{
 
 public:
     MediaTouchPanel();

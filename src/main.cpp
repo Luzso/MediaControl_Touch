@@ -1,26 +1,45 @@
 #include <Arduino.h>
-#include "PanelGUI.h"
+//#include "PanelGUI.h"
+#include "CalibrationPanel.h"
 
 
 PanelGUI* mediaPlayer;
+CalibrationPanel* calibrationPanel;
 
-int i = 0;
+enum activepanel {
+    calibration,
+    mediaplayer
+} panel;
+
+
+void startCalibration();
 
 void setup(){
 
-    mediaPlayer = new PanelGUI();
+    //mediaPlayer = new PanelGUI();
+    startCalibration();
+    
     delay(100);
 
-    String displayString = String("Hello Annaaa!!!") + mediaPlayer->getFontSize().height;
-    
-    mediaPlayer->clearScreen();
-    mediaPlayer->drawButtonSquare(50, 30, 75, 75, true);  
-    mediaPlayer->writeInBox_sizes(displayString, 50, 30, 100, 100, true);
-    
 }
 
 void loop(){
   
+    switch(panel){
+        case calibration:
+            calibrationPanel->update();
+            break;
+
+        default:
+            break;
+    }
     
+}
+
+void startCalibration(){
+    panel = calibration;
+
+    calibrationPanel = new CalibrationPanel();
+    calibrationPanel->startCalibration();
 }
 

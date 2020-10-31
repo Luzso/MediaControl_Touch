@@ -1,7 +1,7 @@
 #include "MediaTouchPanel.h"
 
-MediaTouchPanel::MediaTouchPanel() :
-    BasePanel()
+MediaTouchPanel::MediaTouchPanel() 
+    : BasePanel()
 {
 
 }

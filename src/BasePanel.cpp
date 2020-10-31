@@ -1,7 +1,7 @@
 #include "BasePanel.h"
 
-BasePanel::BasePanel() :
-    PanelTouch(), PanelGUI()
+BasePanel::BasePanel() 
+    : PanelTouch(), PanelGUI()
 {
     // Recall calibration from FLASH
 }

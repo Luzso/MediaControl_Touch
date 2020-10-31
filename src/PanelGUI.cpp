@@ -50,7 +50,7 @@ void PanelGUI::setDefaultBackground(uint16_t color){
 
 // BUTTON GRAPHICS
 void PanelGUI::drawButtonSquare(int x, int y, int width, int height, bool selected, bool update){
-    if( x + width <= PIXELS_X && y + height <= PIXELS_Y){
+    if( x + width <= SCREEN_WIDTH && y + height <= SCREEN_HEIGHT){
         this->clearRect(x, y, width, height);
 
         uint16_t color = ILI9488_CYAN;
@@ -66,6 +66,21 @@ void PanelGUI::drawButtonSquare(int x, int y, int width, int height, bool select
     else{
         this->drawError(buttonsquareError);
     }
+}
+
+void PanelGUI::drawCrossHair(int x, int y){
+    int outerWidth = 20;
+    int outerHeight = 20;
+
+    int rectStartX = x - outerWidth / 2;
+    int rectStartY = y - outerHeight / 2;
+    this->clearRect(rectStartX, rectStartY, outerWidth, outerHeight);
+
+    this->monitor->drawRect(rectStartX, rectStartY, outerWidth, outerHeight, ILI9488_WHITE);
+    this->monitor->drawLine(x - outerWidth / 4, y, x + outerWidth /4, y, ILI9488_WHITE);
+    this->monitor->drawLine(x, y - outerHeight / 4, x, y + outerHeight / 4, ILI9488_WHITE);
+
+    this->monitor->updateScreen();
 }
 
 // TEXT EDITING
@@ -89,14 +104,14 @@ FontSize PanelGUI::getFontSize(){
 }
 
 
-void PanelGUI::writeInBox_boundaries(String text, int xStart, int xEnd, int yStart, int yEnd, bool doCenter, bool update){
+void PanelGUI::writeInBox_boundaries(String text, int xStart, int xEnd, int yStart, int yEnd, bool doCenter, TextboxBackground background, bool update){
     int width = xEnd - xStart;
     int height = yEnd - yStart;
 
-    this->writeInBox_sizes(text, xStart, yStart, width, height, doCenter, update);
+    this->writeInBox_sizes(text, xStart, yStart, width, height, doCenter, background, update);
 }
 
-void PanelGUI::writeInBox_sizes(String text, int xBox, int yBox, int width, int height, bool doCenter, bool update){
+void PanelGUI::writeInBox_sizes(String text, int x, int y, int width, int height, bool doCenter, TextboxBackground background, bool update){
 
     FontSize size = this->getFontSize();
     int numChars = text.length();
@@ -105,18 +120,22 @@ void PanelGUI::writeInBox_sizes(String text, int xBox, int yBox, int width, int 
     int yOrigin = 0;
     int textWidth = size.height/FONT_HEIGHT_WIDTH_RATIO*numChars;
     int textHeight = size.height;
-    if(xBox > 0 && yBox > 0 && xBox + width <= PIXELS_X && yBox + height <= PIXELS_Y){
+    if(x >= 0 && y >= 0 && x + width <= SCREEN_WIDTH && y + height <= SCREEN_HEIGHT){
         if(doCenter){
             xOrigin = width/2 - textWidth / 2.0;
             yOrigin = width/2 - textHeight / 2.0;
         }
-        xOrigin += xBox;
-        yOrigin += yBox;
+        xOrigin += x;
+        yOrigin += y;
     }
     else{
         this->drawError(textError);
     }
-    this->clearRect(xOrigin, yOrigin, textWidth, textHeight);
+    if(background.useDefaultBackground)
+        this->clearRect(xOrigin, yOrigin, textWidth, textHeight + 3); // +3 to account for commas
+    else
+        this->monitor->fillRect(xOrigin, yOrigin, textWidth, textHeight, background.color);
+
     monitor->setCursor(xOrigin, yOrigin);
     this->monitor->print(text);
 
@@ -135,8 +154,8 @@ void PanelGUI::clearRect(int x, int y, int width, int height, bool doUpdate){
 void PanelGUI::drawError(Error error){
     int width = 5;
     int height = 5;
-    int x = PIXELS_X - width;
-    int y =PIXELS_Y - height;
+    int x = SCREEN_WIDTH - width;
+    int y =SCREEN_HEIGHT - height;
 
     this->monitor->setCursor(x, y);
     this->monitor->fillRect(x, y, width, height, ILI9488_RED);
