@@ -28,18 +28,20 @@ PanelGUI::PanelGUI(){
 void PanelGUI::initGraphics(){
     this->monitor = new ILI9488_t3(CS_PIN, DC_PIN, RST_PIN, MOSI_PIN, SCLK_PIN, MISO_PIN);
     this->monitor->begin();
-    this->monitor->useFrameBuffer(true);
-    this->monitor->setFrameBuffer(this->frame_buffer);
+    //this->monitor->setFrameBuffer(this->frame_buffer);
+    //this->monitor->useFrameBuffer(true);
     this->monitor->setRotation(ROTATION);
     this->setSaveFont(Arial_12_Bold);
     // Test
     this->monitor->setTextColor(ILI9488_CYAN);
+    this->setDefaultBackground(ILI9488_BLACK);
+    this->clearScreen();
 }
 
 void PanelGUI::clearScreen(){
 
-    this->monitor->fillScreen(this->backgroundColor);
-    this->monitor->updateScreen();
+    this->monitor->fillScreen(backgroundColor);
+    this->updateScreen_d();
 }
 
 void PanelGUI::setDefaultBackground(uint16_t color){
@@ -61,14 +63,14 @@ void PanelGUI::drawButtonSquare(int x, int y, int width, int height, bool select
         this->monitor->fillRect(x + margin, y + margin, width - margin*2, height - margin*2, selectedColor);
 
         if(update)
-            this->monitor->updateScreen();
+            this->updateScreen_d();
     }
     else{
         this->drawError(buttonsquareError);
     }
 }
 
-void PanelGUI::drawCrossHair(int x, int y){
+void PanelGUI::drawCrossHair(int x, int y, uint16_t color, bool doUpdate){
     int outerWidth = 20;
     int outerHeight = 20;
 
@@ -76,11 +78,12 @@ void PanelGUI::drawCrossHair(int x, int y){
     int rectStartY = y - outerHeight / 2;
     this->clearRect(rectStartX, rectStartY, outerWidth, outerHeight);
 
-    this->monitor->drawRect(rectStartX, rectStartY, outerWidth, outerHeight, ILI9488_WHITE);
-    this->monitor->drawLine(x - outerWidth / 4, y, x + outerWidth /4, y, ILI9488_WHITE);
-    this->monitor->drawLine(x, y - outerHeight / 4, x, y + outerHeight / 4, ILI9488_WHITE);
+    this->monitor->drawRect(rectStartX, rectStartY, outerWidth, outerHeight, color);
+    this->monitor->drawLine(x - outerWidth / 4, y, x + outerWidth /4, y, color);
+    this->monitor->drawLine(x, y - outerHeight / 4, x, y + outerHeight / 4, color);
 
-    this->monitor->updateScreen();
+    if(doUpdate)
+        this->updateScreen_d();
 }
 
 // TEXT EDITING
@@ -120,10 +123,10 @@ void PanelGUI::writeInBox_sizes(String text, int x, int y, int width, int height
     int yOrigin = 0;
     int textWidth = size.height/FONT_HEIGHT_WIDTH_RATIO*numChars;
     int textHeight = size.height;
-    if(x >= 0 && y >= 0 && x + width <= SCREEN_WIDTH && y + height <= SCREEN_HEIGHT){
+    if(x >= 0 && y >= 0 && x + width - 1 <= SCREEN_WIDTH && y + height - 1 <= SCREEN_HEIGHT){
         if(doCenter){
             xOrigin = width/2 - textWidth / 2.0;
-            yOrigin = width/2 - textHeight / 2.0;
+            yOrigin = height/2 - textHeight / 2.0;
         }
         xOrigin += x;
         yOrigin += y;
@@ -140,15 +143,22 @@ void PanelGUI::writeInBox_sizes(String text, int x, int y, int width, int height
     this->monitor->print(text);
 
     if(update)
-        this->monitor->updateScreen();
+        this->updateScreen_d();
 
 }
 
 void PanelGUI::clearRect(int x, int y, int width, int height, bool doUpdate){
     this->monitor->fillRect(x, y, width, height, this->backgroundColor);
 
-    if(doUpdate)
-        this->monitor->updateScreen();
+    if(doUpdate){
+        this->updateScreen_d();
+        this->drawDebug();
+    }
+}
+
+void PanelGUI::updateScreen_d(){
+    this->monitor->updateScreen();
+    //this->monitor->freeFrameBuffer();
 }
 
 void PanelGUI::drawError(Error error){
@@ -159,6 +169,18 @@ void PanelGUI::drawError(Error error){
 
     this->monitor->setCursor(x, y);
     this->monitor->fillRect(x, y, width, height, ILI9488_RED);
+    this->monitor->updateScreen();
+}
+
+
+void PanelGUI::drawDebug(){
+    int width = 5;
+    int height = 5;
+    int x = SCREEN_WIDTH - width;
+    int y =SCREEN_HEIGHT - height*2;
+
+    this->monitor->setCursor(x, y);
+    this->monitor->fillRect(x, y, width, height, ILI9488_GREEN);
     this->monitor->updateScreen();
 }
 

@@ -46,9 +46,10 @@ public:
     void setDefaultBackground(uint16_t color);
     
     void clearScreen();
+    void updateScreen_d();
 
     void drawButtonSquare(int x, int y, int width, int height, bool selected, bool update = true);
-    void drawCrossHair(int x, int y);
+    void drawCrossHair(int x, int y, uint16_t color, bool doUpdate = false);
 
     void writeInBox_sizes(String text, int xStart, int yStart, int width, int height, bool doCenter, TextboxBackground background, bool update = true);
     void writeInBox_boundaries(String text, int xBound1, int xBond2, int yBound1, int yBound2, bool doCenter, TextboxBackground background, bool update = true);
@@ -57,7 +58,7 @@ public:
     void setSaveFont(const ILI9341_t3_font_t& font);
     ILI9341_t3_font_t getFont();
 
-    void drawError(Error error);
+    
 
 protected:
     
@@ -68,6 +69,9 @@ private:
 
     uint16_t backgroundColor = ILI9488_BLACK;
     ILI9341_t3_font_t currentFont = Arial_12_Bold;
+
+    void drawError(Error error);
+    void drawDebug();
 
 
 };

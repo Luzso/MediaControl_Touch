@@ -1,6 +1,11 @@
 #include "BasePanel.h"
 
+#define N_CALIB_POINTS 8
 
+enum orientation{
+    landscape,
+    portrait
+};
 
 class CalibrationPanel : public BasePanel
  {
@@ -17,18 +22,36 @@ class CalibrationPanel : public BasePanel
     uint32_t calx, caly, cals;
     char buf[13];
 
-
-    CalibrationPanel();
+    CalibrationPanel(orientation orientation);
 
     void startCalibration();
     void update();
 
     private:
+    orientation ori;
 
     TextboxBackground textBackground;
+    
+    XYCoords crossHairPositions[N_CALIB_POINTS]= {
+        XYCoords(10, 10),
+        XYCoords(10, SCREEN_HEIGHT/ 2),
+        XYCoords(10, SCREEN_HEIGHT - 11),
+        XYCoords(SCREEN_WIDTH / 2, 10),
+        XYCoords(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 11),
+        XYCoords(SCREEN_WIDTH - 11, 10),
+        XYCoords(SCREEN_WIDTH - 11, SCREEN_HEIGHT / 2),
+        XYCoords(SCREEN_WIDTH - 11, SCREEN_HEIGHT - 11)
+        };
 
-    void writeReadXY(TouchCoords* xy);
+
+
+    void writeReadXY(XYCoords* xy);
     void initBackgroundVisuals();
-
+    void clearCalibSpace();
+    void calibrate(int x, int y, int i);
+    void readCoordinates();
+    void getCalibTouchPoints();
+    void calculateCalibration();
+    void fail();
 
 };

@@ -1,15 +1,15 @@
 #include "EEPROMManager.h"
 #include "URTouch.h"
 
-struct TouchCoords{
+struct XYCoords{
 
-    TouchCoords(uint16_t newX = 0, uint16_t newY = 0){
+    XYCoords(uint16_t newX = 0, uint16_t newY = 0){
         this->x = newX;
         this->y = newY;
     }
 
 
-    bool compare(TouchCoords* other){
+    bool compare(XYCoords* other){
         return (this->x == other->x && this->y == other->y);
     }
 
@@ -22,8 +22,8 @@ class PanelTouch : public URTouch
 public:
     PanelTouch();
 
-    TouchCoords getTouch();
+    XYCoords getTouch();
 
-    TouchCoords prevTouch;
+    XYCoords prevTouch;
     bool hasTouch = false;
 };

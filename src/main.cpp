@@ -27,7 +27,7 @@ void loop(){
   
     switch(panel){
         case calibration:
-            calibrationPanel->update();
+            //calibrationPanel->update();
             break;
 
         default:
@@ -39,7 +39,7 @@ void loop(){
 void startCalibration(){
     panel = calibration;
 
-    calibrationPanel = new CalibrationPanel();
+    calibrationPanel = new CalibrationPanel(landscape);
     calibrationPanel->startCalibration();
 }
 
