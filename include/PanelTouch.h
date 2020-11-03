@@ -10,20 +10,28 @@ struct XYCoords{
 
 
     bool compare(XYCoords* other){
-        return (this->x == other->x && this->y == other->y);
+        return (this->x == other->x) && (this->y == other->y);
     }
 
     uint16_t x;
     uint16_t y;
 };
 
-class PanelTouch : public URTouch
+class PanelTouch
 {
 public:
-    PanelTouch();
+    PanelTouch(URTouch* touchObj);
 
     XYCoords getTouch();
-
+    XYCoords getTouchDown();
+    
+    URTouch* touch = NULL;
     XYCoords prevTouch;
     bool hasTouch = false;
+
+private:
+
+    void setTouchObj(URTouch* touchObj);
+    void init();
+
 };

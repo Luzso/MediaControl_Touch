@@ -3,6 +3,7 @@
 #include "CalibrationPanel.h"
 
 
+URTouch* touch = NULL; // Is Initialized in class PanelTouch
 PanelGUI* mediaPlayer;
 CalibrationPanel* calibrationPanel;
 
@@ -27,7 +28,7 @@ void loop(){
   
     switch(panel){
         case calibration:
-            //calibrationPanel->update();
+            calibrationPanel->update();
             break;
 
         default:
@@ -39,7 +40,7 @@ void loop(){
 void startCalibration(){
     panel = calibration;
 
-    calibrationPanel = new CalibrationPanel(landscape);
+    calibrationPanel = new CalibrationPanel(touch, landscape);
     calibrationPanel->startCalibration();
 }
 

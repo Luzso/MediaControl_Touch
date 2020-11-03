@@ -4,6 +4,9 @@ class MediaTouchPanel : BasePanel
 {
 
 public:
-    MediaTouchPanel();
+    MediaTouchPanel(URTouch* touchObj);
     
+
+private: 
+    void drawMainUI();
 };

@@ -6,7 +6,7 @@ class BasePanel : public PanelTouch, public PanelGUI
 {
 
 public:
-    BasePanel();
+    BasePanel(URTouch* touchObj);
     
     void performTouchCalibration();
 };

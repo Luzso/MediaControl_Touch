@@ -18,11 +18,12 @@ class CalibrationPanel : public BasePanel
     uint32_t rx[8], ry[8];
     uint32_t clx, crx, cty, cby;
     float px, py;
-    int dispx, dispy, text_y_center;
-    uint32_t calx, caly, cals;
+    int dispx = SCREEN_HEIGHT, dispy = SCREEN_WIDTH;
+    int text_y_center;
     char buf[13];
-
-    CalibrationPanel(orientation orientation);
+    uint32_t calx, caly, cals;
+    
+    CalibrationPanel(URTouch* touchObj, orientation orientation);
 
     void startCalibration();
     void update();
@@ -39,7 +40,7 @@ class CalibrationPanel : public BasePanel
         XYCoords(SCREEN_WIDTH / 2, 10),
         XYCoords(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 11),
         XYCoords(SCREEN_WIDTH - 11, 10),
-        XYCoords(SCREEN_WIDTH - 11, SCREEN_HEIGHT / 2),
+        XYCoords(SCREEN_WIDTH - 10, SCREEN_HEIGHT / 2),
         XYCoords(SCREEN_WIDTH - 11, SCREEN_HEIGHT - 11)
         };
 
@@ -52,6 +53,9 @@ class CalibrationPanel : public BasePanel
     void readCoordinates();
     void getCalibTouchPoints();
     void calculateCalibration();
+    void finishCalibration();
+    void toHex(uint32_t num);
+    void waitForTouch();
     void fail();
 
 };

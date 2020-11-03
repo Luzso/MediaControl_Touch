@@ -36,7 +36,6 @@ class PanelGUI {
 public:
 
     ILI9488_t3* monitor = NULL;
-    URTouch* touch = NULL;
 
     RAFB frame_buffer[ILI9488_TFTWIDTH * ILI9488_TFTHEIGHT];
      
