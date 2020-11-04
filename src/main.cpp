@@ -40,7 +40,7 @@ void loop(){
 void startCalibration(){
     panel = calibration;
 
-    calibrationPanel = new CalibrationPanel(touch, landscape);
+    calibrationPanel = new CalibrationPanel(touch, portrait);
     calibrationPanel->startCalibration();
 }
 

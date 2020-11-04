@@ -76,7 +76,7 @@ void CalibrationPanel::calibrate(int x, int y, int i){
     readCoordinates();
     this->clearRect(SCREEN_WIDTH / 2 - 50, 50, 200, 30);
     this->writeInBox_sizes("RELEASE", SCREEN_WIDTH / 2 - 50, 50, 200, 30, false, TextboxBackground());
-    this->drawCrossHair(x,y, ILI9488_GREEN);
+    this->drawCrossHair(x, y, ILI9488_GREEN);
     rx[i] = cx;
     ry[i] = cy;
 
@@ -162,9 +162,6 @@ void CalibrationPanel::waitForTouch()
 
 void CalibrationPanel::finishCalibration(){
 
-    //#define CAL_X 0x00378F66UL
-    //#define CAL_Y 0x03C34155UL
-    //#define CAL_S 0x000EF13FUL
     this->monitor->setCursor(SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 + 20);
     toHex(calx);
     this->monitor->print(buf);
@@ -190,13 +187,7 @@ void CalibrationPanel::update(){
         this->monitor->drawPixel(touchPoint.x, touchPoint.y, ILI9488_WHITE);
 
     }
-    else if(!touchPoint.compare(&this->prevTouch)){
-        inc++;
-        touchPoint = XYCoords(inc,0);
-        writeReadXY(&touchPoint);
-    }
 
-    delay(200); // Replace with timer check
 }
 
 
@@ -206,8 +197,6 @@ void CalibrationPanel::initBackgroundVisuals(){
     this->clearScreen();
     this->setSaveFont(Arial_12);
     this->writeInBox_sizes("Calibrating.", 0, 0, SCREEN_WIDTH, 320, true, TextboxBackground(), false);
-
-    drawCrossHair(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, ILI9488_ORANGE);
 
 }
 

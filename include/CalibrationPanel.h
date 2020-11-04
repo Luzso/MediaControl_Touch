@@ -18,7 +18,7 @@ class CalibrationPanel : public BasePanel
     uint32_t rx[8], ry[8];
     uint32_t clx, crx, cty, cby;
     float px, py;
-    int dispx = SCREEN_HEIGHT, dispy = SCREEN_WIDTH;
+    int dispx = SCREEN_WIDTH, dispy = SCREEN_HEIGHT;
     int text_y_center;
     char buf[13];
     uint32_t calx, caly, cals;

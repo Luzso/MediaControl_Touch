@@ -11,3 +11,12 @@ void MediaTouchPanel::drawMainUI(){
 
 
 }
+
+void MediaTouchPanel::update(){
+
+    XYCoords touch = this->getTouch();
+    if(this->hasTouch){
+        // Do something
+    }
+    
+}

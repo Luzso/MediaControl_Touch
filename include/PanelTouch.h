@@ -33,5 +33,10 @@ private:
 
     void setTouchObj(URTouch* touchObj);
     void init();
+    bool isReadyForNewTouch();
+    void setHasTouch(bool touchActive);
+
+    unsigned long timeAtLift = 0;
+    unsigned long liftTimeout = 100;
 
 };

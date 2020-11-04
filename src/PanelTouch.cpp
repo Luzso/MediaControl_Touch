@@ -28,27 +28,51 @@ XYCoords PanelTouch::getTouch(){
     
     XYCoords retCoords(0, 0);
     if(this->touch->dataAvailable()){
-        this->touch->read();
+        if(this->isReadyForNewTouch()){
+            // Read the available coordinates
+            this->touch->read();
+            uint16_t x = this->touch->getX();
+            uint16_t y = this->touch->getY();
 
-        this->hasTouch = true;
-
-        uint16_t x = this->touch->getX();
-        uint16_t y = this->touch->getY();
-
-        if(true || x <= SCREEN_WIDTH && y <= SCREEN_HEIGHT){
-            retCoords.x = this->touch->getX() * 1.48;
-            retCoords.y = this->touch->getY() * 1.333;
+            if(true || x <= SCREEN_WIDTH && y <= SCREEN_HEIGHT){
+                retCoords.x = this->touch->getX();// * 1.48;
+                retCoords.y = this->touch->getY();// * 1.333;
+                this->setHasTouch(true);
+            }
+            else
+                this->setHasTouch(false);
         }
         else
             this->hasTouch = false;
+        
     }
-    else
-        this->hasTouch = false;
+    else{
+        if(this->hasTouch) // Touch was registered at last update, meaning finger has just been lifted
+            this->timeAtLift = millis(); // Update timestamp of lifted finger. 
+
+        this->setHasTouch(false);
+    }
     
     this->prevTouch = retCoords;
     return retCoords;
 }
 
+bool PanelTouch::isReadyForNewTouch(){
+
+    // Check if the finger was lifted due to uncertainty of the touch panel or if it seems intentional (Time since lift)
+    unsigned long timeSinceLift = millis() - this->timeAtLift; // Check how long it is since a lift was registered
+    
+    if(!this->hasTouch && timeSinceLift > this->liftTimeout)
+        return true;
+    
+    this->timeAtLift = millis();
+    return false;
+}
+
+
+void PanelTouch::setHasTouch(bool touchActive){
+    this->hasTouch = touchActive;
+}
 
 XYCoords PanelTouch::getTouchDown(){
     XYCoords tempCoords = this->getTouch();
