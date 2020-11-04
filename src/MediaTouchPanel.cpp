@@ -8,8 +8,6 @@ MediaTouchPanel::MediaTouchPanel(URTouch* touchObj)
 
 void MediaTouchPanel::drawMainUI(){
 
-
-
 }
 
 void MediaTouchPanel::update(){
@@ -19,4 +17,15 @@ void MediaTouchPanel::update(){
         // Do something
     }
     
+}
+
+void MediaTouchPanel::createButtons(){
+    this->nButtons = 1;
+    this->buttons = new Button[nButtons];
+    this->addButton("PlayPause", &onBtn_startPause, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 50, 50);
+}
+
+
+void MediaTouchPanel::onBtn_startPause(){
+
 }

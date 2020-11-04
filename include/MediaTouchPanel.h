@@ -7,6 +7,10 @@ public:
     MediaTouchPanel(URTouch* touchObj);
     
     void update();
+    static void onBtn_startPause();
+
 private: 
+
     void drawMainUI();
+    void createButtons();
 };

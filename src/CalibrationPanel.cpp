@@ -182,14 +182,10 @@ void CalibrationPanel::update(){
     static int inc = 0;
     XYCoords touchPoint = this->getTouchDown();
     if(this->hasTouch){
-
         writeReadXY(&touchPoint);
         this->monitor->drawPixel(touchPoint.x, touchPoint.y, ILI9488_WHITE);
-
     }
-
 }
-
 
 void CalibrationPanel::initBackgroundVisuals(){
 
@@ -207,6 +203,7 @@ void CalibrationPanel::writeReadXY(XYCoords* xy){
     this->writeInBox_sizes(xyString, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 50, 200, 30, true, TextboxBackground(), false);
 }
 
+
 void CalibrationPanel::toHex(uint32_t num){
     buf[0] = '0';
     buf[1] = 'x';
@@ -221,7 +218,6 @@ void CalibrationPanel::toHex(uint32_t num){
             buf[zz] = (num & 0xF) + 48;
         num=num>>4;
     }
-
 }
 
 void CalibrationPanel::clearCalibSpace(){
