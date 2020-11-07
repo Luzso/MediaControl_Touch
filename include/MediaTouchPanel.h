@@ -1,13 +1,16 @@
+#pragma once
+
 #include "BasePanel.h"
 
-class MediaTouchPanel : BasePanel
+class MediaTouchPanel : public BasePanel
 {
 
 public:
-    MediaTouchPanel(URTouch* touchObj);
+    MediaTouchPanel(PanelTouch* touch, PanelGUI* gui);
     
-    void update();
     static void onBtn_startPause();
+    static void onBtn_next();
+    static void onBtn_previous();
 
 private: 
 

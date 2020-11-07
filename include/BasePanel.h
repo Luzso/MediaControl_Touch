@@ -1,21 +1,21 @@
-#include "PanelTouch.h"
-#include "PanelGUI.h"
-#include "Button.h"
+#pragma once
 
-class BasePanel : public PanelTouch, public PanelGUI
+#include "Button.h"
+#include "PanelGUI.h"
+#include "PanelTouch.h"
+
+class BasePanel
 {
 
     public:
-    BasePanel(URTouch* touchObj);
-
+    BasePanel(PanelTouch* touch, PanelGUI* gui);  
     
     int nButtons = 0;
     int nLoadedButtons = 0;
     Button* buttons;
 
-    protected:
+    PanelGUI* guiObj = nullptr;
+    PanelTouch* touchObj = nullptr;
 
-    virtual void createButtons();
-    void addButton(String name, void(*btnFunc)(), int x, int y, int width, int height);
-    
+    void update();
 };

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "BasePanel.h"
 
 #define N_CALIB_POINTS 8
@@ -10,6 +12,7 @@ enum orientation{
 class CalibrationPanel : public BasePanel
  {
     public:
+    CalibrationPanel(PanelTouch* touch, PanelGUI* gui, orientation orientation);
 
     int lastX = 0;
     int lastY = 0;
@@ -23,14 +26,13 @@ class CalibrationPanel : public BasePanel
     char buf[13];
     uint32_t calx, caly, cals;
     
-    CalibrationPanel(URTouch* touchObj, orientation orientation);
 
     void startCalibration();
     void update();
 
     private:
-    orientation ori;
 
+    orientation ori;
     TextboxBackground textBackground;
     
     XYCoords crossHairPositions[N_CALIB_POINTS]= {

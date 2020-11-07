@@ -1,10 +1,13 @@
 #include <Arduino.h>
-//#include "PanelGUI.h"
+#include "MediaTouchPanel.h"
 #include "CalibrationPanel.h"
+#include "PanelTouch.h"
+#include "PanelGUI.h"
 
+PanelTouch* touch;
+PanelGUI* gui;
 
-URTouch* touch = NULL; // Is Initialized in class PanelTouch
-PanelGUI* mediaPlayer;
+MediaTouchPanel* mediaPlayerPanel = NULL;
 CalibrationPanel* calibrationPanel;
 
 enum activepanel {
@@ -14,21 +17,29 @@ enum activepanel {
 
 
 void startCalibration();
+void startMediaPlayer();
 
 void setup(){
-
-    //mediaPlayer = new PanelGUI();
-    startCalibration();
-    
+    touch = new PanelTouch();
     delay(100);
+    gui = new PanelGUI();
 
+    
+    //startCalibration();
+    startMediaPlayer();
+
+    delay(100);
 }
 
 void loop(){
-  
+    
     switch(panel){
         case calibration:
             calibrationPanel->update();
+            break;
+
+        case mediaplayer:
+            mediaPlayerPanel->update();
             break;
 
         default:
@@ -37,10 +48,16 @@ void loop(){
     
 }
 
+void startMediaPlayer(){
+    panel = mediaplayer;
+
+    mediaPlayerPanel = new MediaTouchPanel(touch, gui);
+}
+
 void startCalibration(){
     panel = calibration;
 
-    calibrationPanel = new CalibrationPanel(touch, portrait);
+    calibrationPanel = new CalibrationPanel(touch, gui, portrait);
     calibrationPanel->startCalibration();
 }
 

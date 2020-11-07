@@ -2,8 +2,8 @@
 
 
 
-CalibrationPanel::CalibrationPanel(URTouch* touchObj, orientation orientation) 
-    : BasePanel(touchObj)
+CalibrationPanel::CalibrationPanel(PanelTouch* touch, PanelGUI* gui,  orientation orientation) 
+    : BasePanel(touch, gui)
 {
     this->ori = orientation;
 
@@ -38,17 +38,17 @@ void CalibrationPanel::readCoordinates(){
     boolean OK = false;
 
     while(OK == false){
-        this->clearRect(SCREEN_WIDTH / 2 - 50, 50, 200, 30);
-        this->writeInBox_sizes("PRESS", SCREEN_WIDTH / 2 - 50, 50, 200, 30, false, TextboxBackground());
-        while (this->touch->dataAvailable() == false) {}
-        this->clearRect(SCREEN_WIDTH / 2 - 50, 50, 200, 30);
-        this->writeInBox_sizes("HOLD", SCREEN_WIDTH / 2 - 50, 50, 200, 30, false, TextboxBackground());
-        while((this->touch->dataAvailable() == true) && (cnt < iter) && (failcount < 10000)){
-            this->touch->calibrateRead();
-            if(!((this->touch->TP_X == 65535) || (this->touch->TP_Y==65535)))
+        this->guiObj->clearRect(SCREEN_WIDTH / 2 - 50, 50, 200, 30);
+        this->guiObj->writeInBox_sizes("PRESS", SCREEN_WIDTH / 2 - 50, 50, 200, 30, false, TextboxBackground());
+        while (this->touchObj->dataAvailable() == false) {}
+        this->guiObj->clearRect(SCREEN_WIDTH / 2 - 50, 50, 200, 30);
+        this->guiObj->writeInBox_sizes("HOLD", SCREEN_WIDTH / 2 - 50, 50, 200, 30, false, TextboxBackground());
+        while((this->touchObj->dataAvailable() == true) && (cnt < iter) && (failcount < 10000)){
+            this->touchObj->calibrateRead();
+            if(!((this->touchObj->TP_X == 65535) || (this->touchObj->TP_Y==65535)))
             {
-                tx += this->touch->TP_X;
-                ty += this->touch->TP_Y;
+                tx += this->touchObj->TP_X;
+                ty += this->touchObj->TP_Y;
                 cnt++;
             }
             else
@@ -72,15 +72,15 @@ void CalibrationPanel::readCoordinates(){
 
 
 void CalibrationPanel::calibrate(int x, int y, int i){
-    this->drawCrossHair(x, y, ILI9488_WHITE);
+    this->guiObj->drawCrossHair(x, y, ILI9488_WHITE);
     readCoordinates();
-    this->clearRect(SCREEN_WIDTH / 2 - 50, 50, 200, 30);
-    this->writeInBox_sizes("RELEASE", SCREEN_WIDTH / 2 - 50, 50, 200, 30, false, TextboxBackground());
-    this->drawCrossHair(x, y, ILI9488_GREEN);
+    this->guiObj->clearRect(SCREEN_WIDTH / 2 - 50, 50, 200, 30);
+    this->guiObj->writeInBox_sizes("RELEASE", SCREEN_WIDTH / 2 - 50, 50, 200, 30, false, TextboxBackground());
+    this->guiObj->drawCrossHair(x, y, ILI9488_GREEN);
     rx[i] = cx;
     ry[i] = cy;
 
-    while(this->touch->dataAvailable() == true) {}
+    while(this->touchObj->dataAvailable() == true) {}
 }
 
 
@@ -155,22 +155,22 @@ void CalibrationPanel::calculateCalibration(){
 
 void CalibrationPanel::waitForTouch()
 {
-  while (this->touch->dataAvailable() == true) {}
-  while (this->touch->dataAvailable() == false) {}
-  while (this->touch->dataAvailable() == true) {}
+  while (this->touchObj->dataAvailable() == true) {}
+  while (this->touchObj->dataAvailable() == false) {}
+  while (this->touchObj->dataAvailable() == true) {}
 }
 
 void CalibrationPanel::finishCalibration(){
 
-    this->monitor->setCursor(SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 + 20);
+    this->guiObj->monitor->setCursor(SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 + 20);
     toHex(calx);
-    this->monitor->print(buf);
-    this->monitor->setCursor(SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 + 40);
+    this->guiObj->monitor->print(buf);
+    this->guiObj->monitor->setCursor(SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 + 40);
     toHex(caly);
-    this->monitor->print(buf);
-    this->monitor->setCursor(SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 + 60);
+    this->guiObj->monitor->print(buf);
+    this->guiObj->monitor->setCursor(SCREEN_WIDTH / 2 - 45, SCREEN_HEIGHT / 2 + 60);
     toHex(cals);
-    this->monitor->print(buf);
+    this->guiObj->monitor->print(buf);
     
 }
 
@@ -180,27 +180,27 @@ void CalibrationPanel::fail(){
 
 void CalibrationPanel::update(){
     static int inc = 0;
-    XYCoords touchPoint = this->getTouchDown();
-    if(this->hasTouch){
+    XYCoords touchPoint = this->touchObj->getTouchDown();
+    if(this->touchObj->hasTouch){
         writeReadXY(&touchPoint);
-        this->monitor->drawPixel(touchPoint.x, touchPoint.y, ILI9488_WHITE);
+        this->guiObj->monitor->drawPixel(touchPoint.x, touchPoint.y, ILI9488_WHITE);
     }
 }
 
 void CalibrationPanel::initBackgroundVisuals(){
 
     text_y_center=(dispy/2)-6;
-    this->clearScreen();
-    this->setSaveFont(Arial_12);
-    this->writeInBox_sizes("Calibrating.", 0, 0, SCREEN_WIDTH, 320, true, TextboxBackground(), false);
+    this->guiObj->clearScreen();
+    this->guiObj->setSaveFont(Arial_12);
+    this->guiObj->writeInBox_sizes("Calibrating.", 0, 0, SCREEN_WIDTH, 320, true, TextboxBackground(), false);
 
 }
 
 
 void CalibrationPanel::writeReadXY(XYCoords* xy){
     String xyString = String(xy->x) + ", " + String(xy->y);
-    this->clearRect(SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 50, 200, 30);
-    this->writeInBox_sizes(xyString, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 50, 200, 30, true, TextboxBackground(), false);
+    this->guiObj->clearRect(SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 50, 200, 30);
+    this->guiObj->writeInBox_sizes(xyString, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 50, 200, 30, true, TextboxBackground(), false);
 }
 
 
@@ -222,5 +222,5 @@ void CalibrationPanel::toHex(uint32_t num){
 
 void CalibrationPanel::clearCalibSpace(){
     int margin = 50;
-    this->clearRect(margin, margin, SCREEN_WIDTH - margin, SCREEN_HEIGHT - margin * 2, true);
+    this->guiObj->clearRect(margin, margin, SCREEN_WIDTH - margin, SCREEN_HEIGHT - margin * 2, true);
 }

@@ -36,6 +36,7 @@ void PanelGUI::initGraphics(){
     this->monitor->setTextColor(ILI9488_CYAN);
     this->setDefaultBackground(ILI9488_BLACK);
     this->clearScreen();
+
 }
 
 void PanelGUI::clearScreen(){

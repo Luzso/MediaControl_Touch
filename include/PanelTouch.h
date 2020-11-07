@@ -1,3 +1,5 @@
+#pragma once
+
 #include "EEPROMManager.h"
 #include "URTouch.h"
 
@@ -17,25 +19,25 @@ struct XYCoords{
     uint16_t y;
 };
 
-class PanelTouch
+class PanelTouch : public URTouch
 {
 public:
-    PanelTouch(URTouch* touchObj);
+    PanelTouch();
 
     XYCoords getTouch();
     XYCoords getTouchDown();
+    bool getRelease(); 
     
-    URTouch* touch = NULL;
-    XYCoords prevTouch;
+    XYCoords prevTouch; // Nothing if last check didn't have any data
     bool hasTouch = false;
 
 private:
 
-    void setTouchObj(URTouch* touchObj);
-    void init();
     bool isReadyForNewTouch();
     void setHasTouch(bool touchActive);
 
+    bool isReleased = true;
+    unsigned long timeAtTouch = 0;
     unsigned long timeAtLift = 0;
     unsigned long liftTimeout = 100;
 

@@ -1,21 +1,28 @@
 #include "BasePanel.h"
 
-BasePanel::BasePanel(URTouch* touchObj) 
-    : PanelTouch(touchObj), PanelGUI()
+BasePanel::BasePanel(PanelTouch* touch, PanelGUI* gui) 
 {
-    // Recall calibration from FLASH
+    this->touchObj = touch;
+    this->guiObj = gui;
 }
 
+// MOVE TO BASE PANEL
+void BasePanel::update(){
 
-
-void BasePanel::addButton(String name, void(*btnFunc)(), int x, int y, int width, int height) {
-    this->nLoadedButtons++;
-    if(this->nLoadedButtons <= this->nButtons){
-        this->buttons[nLoadedButtons-1] = Button(btnFunc); // Add position and dimenstions
+    XYCoords touchPoint = this->touchObj->getTouch();
+    if(this->touchObj->hasTouch){
+        for(int i_btn = 0; i_btn < this->nButtons; i_btn++){
+            if(buttons[i_btn].wasPressed(touchPoint.x, touchPoint.y)){
+                buttons[i_btn].press();
+                break;
+            }
+            
+        }
+    }
+    else if(this->touchObj->getRelease()){ // True if button was just released
+    for(int i_btn = 0; i_btn < this->nButtons; i_btn++)
+        buttons[i_btn].deSelect();
     }
     
 }
 
-void BasePanel::createButtons() {
-
-}

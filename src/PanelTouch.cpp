@@ -8,35 +8,31 @@
 #define PIN_DO 28
 #define PIN_IRQ 29
 
-PanelTouch::PanelTouch(URTouch* touchObj)
+PanelTouch::PanelTouch()
+    : URTouch(PIN_CLK, PIN_CS, PIN_DIN, PIN_DO, PIN_IRQ)
 {
-    this->setTouchObj(touchObj);
-
-    this->init();
+    this->InitTouch(LANDSCAPE);
 }
 
-void PanelTouch::setTouchObj(URTouch* touchObj){
-    this->touch = touchObj;
-}
-
-void PanelTouch::init(){
-    this->touch = new URTouch(PIN_CLK, PIN_CS, PIN_DIN, PIN_DO, PIN_IRQ);
-    this->touch->InitTouch(LANDSCAPE);
-}
 
 XYCoords PanelTouch::getTouch(){
     
     XYCoords retCoords(0, 0);
-    if(this->touch->dataAvailable()){
+    if(this->dataAvailable()){
+
+        // Record time touch was detetected
+        this->timeAtTouch = millis();
+        this->isReleased = false;
+
         if(this->isReadyForNewTouch()){
             // Read the available coordinates
-            this->touch->read();
-            uint16_t x = this->touch->getX();
-            uint16_t y = this->touch->getY();
+            this->read();
+            uint16_t x = this->getX();
+            uint16_t y = this->getY();
 
             if(true || x <= SCREEN_WIDTH && y <= SCREEN_HEIGHT){
-                retCoords.x = this->touch->getX();// * 1.48;
-                retCoords.y = this->touch->getY();// * 1.333;
+                retCoords.x = this->getX();// * 1.48;
+                retCoords.y = this->getY();// * 1.333;
                 this->setHasTouch(true);
             }
             else
@@ -76,6 +72,20 @@ void PanelTouch::setHasTouch(bool touchActive){
 
 XYCoords PanelTouch::getTouchDown(){
     XYCoords tempCoords = this->getTouch();
-    while(this->touch->dataAvailable())
+    while(this->dataAvailable())
     return tempCoords;
+}
+
+bool PanelTouch::getRelease(){
+    if(!isReleased && !this->dataAvailable()){
+        int timeSinceTouch_ms = millis() - timeAtTouch;
+        
+        static int touchWaitLimit = 100;
+        if(timeSinceTouch_ms >= touchWaitLimit){
+            isReleased = true;
+            return true;
+        }
+    }
+
+    return false;
 }

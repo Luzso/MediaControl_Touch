@@ -1,4 +1,5 @@
-#include "push_button.h"
+#pragma once
+
 //#include <vector>
 //#include <string>
 #include "Wire.h"
@@ -56,13 +57,6 @@ public:
     FontSize getFontSize();
     void setSaveFont(const ILI9341_t3_font_t& font);
     ILI9341_t3_font_t getFont();
-
-    
-
-protected:
-    
-    PushButton playPauseBtn;
-    PushButton *buttons[1] = {&playPauseBtn};
 
 private:
 

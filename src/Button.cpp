@@ -1,16 +1,48 @@
 #include "Button.h"
 
-Button::Button(void(*btnCallback)(), int x, int y, int width, int height){
+Button::Button(
+    PanelGUI* gui,
+    void(*btnCallback)(),
+    void(*drawDeselected)(PanelGUI*, int, int), 
+    void(*drawSelected)(PanelGUI*, int, int), 
+    int xCenter, 
+    int yCenter, 
+    int width, 
+    int height){
+
+    this->guiObj = gui;
 
     this->setBtnCallback(btnCallback);
-    this->setPosition(x, y);
+    this->setPosition(xCenter, yCenter);
     this->setDimensions(width, height);
-    // setGraphics();
+
+    this->drawDS = drawDeselected;
+    this->drawS = drawSelected;
+
+    drawDS(this->guiObj, xCenter, yCenter);
 }
 
-void Button::pressed(){
-    if(this->btnPressCallback != nullptr){
-        this->btnPressCallback();
+
+bool Button::wasPressed(int xTouched, int yTouched){
+    if(
+        xTouched >= this->xCenter - touchWidth / 2 && xTouched <= this->xCenter + touchWidth / 2 &&
+        yTouched >= this->yCenter - touchHeight / 2 && yTouched <= this->yCenter + touchHeight / 2 &&
+        this->active)
+        {
+            this->selected = true;
+            return true;
+        }
+    else
+        return false;
+}
+
+void Button::press(){
+    if(this->active){
+        if(this->btnPressCallback != nullptr){
+            this->btnPressCallback();
+        }
+        if(this->drawS != nullptr)
+            this->drawS(this->guiObj, this->xCenter, this->yCenter);
     }
 }
 
@@ -19,11 +51,18 @@ void Button::setBtnCallback(void(*btnCallback)()){
 }
 
 void Button::setPosition(int xPos, int yPos){
-    this->x = xPos;
-    this->y = yPos;
+    this->xCenter = xPos;
+    this->yCenter = yPos;
 }
 
 void Button::setDimensions(int width, int height){
     this->touchWidth = width;
     this->touchHeight = height;
+}
+
+void Button::deSelect(){
+    if(this->active && this->selected){
+        this->selected = false;
+        this->drawDS(this->guiObj, xCenter, yCenter); 
+    }
 }
