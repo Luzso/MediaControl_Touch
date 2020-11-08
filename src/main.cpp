@@ -3,6 +3,7 @@
 #include "CalibrationPanel.h"
 #include "PanelTouch.h"
 #include "PanelGUI.h"
+#include "StartupAnimation.h"
 
 PanelTouch* touch;
 PanelGUI* gui;
@@ -25,8 +26,9 @@ void setup(){
     gui = new PanelGUI();
 
     
+    startupanimation::animateStartup(gui);
     //startCalibration();
-    startMediaPlayer();
+    //startMediaPlayer();
 
     delay(100);
 }
