@@ -6,7 +6,9 @@ BasePanel::BasePanel(PanelTouch* touch, PanelGUI* gui)
     this->guiObj = gui;
 }
 
-// MOVE TO BASE PANEL
+
+
+// Catch any touches on the panel and check wether or not the touch coordinates is within one of the spawned button boundaries. 
 void BasePanel::update(){
 
     XYCoords touchPoint = this->touchObj->getTouch();
@@ -23,6 +25,5 @@ void BasePanel::update(){
     for(int i_btn = 0; i_btn < this->nButtons; i_btn++)
         buttons[i_btn].deSelect();
     }
-    
 }
 

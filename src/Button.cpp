@@ -1,5 +1,14 @@
 #include "Button.h"
 
+// Initialize the button
+// The button initialization includes
+// - Setting the "pressed" callback function of the button, which 
+//   will likely be located in the Panel class that the button was created in.
+// - Setting the drawing callback functions that draws the button when it is being selected 
+//   and when it is not selected.
+// - xCenter and yCenter describes the center of the spawned button
+// - width and height arguments are used as boundaries together with the center coordinates to detect 
+//   if the given button was pressed on touch-detection.
 Button::Button(
     PanelGUI* gui,
     void(*btnCallback)(),
@@ -23,6 +32,7 @@ Button::Button(
 }
 
 
+// Check if this buttons was pressed when a touch was detected at the argument coordinates. 
 bool Button::wasPressed(int xTouched, int yTouched){
     if(
         xTouched >= this->xCenter - touchWidth / 2 && xTouched <= this->xCenter + touchWidth / 2 &&
