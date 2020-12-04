@@ -9,6 +9,7 @@
 #include "String.h"
 #include "ili9488_t3_font_ArialBold.h"
 #include "ili9488_t3_font_Arial.h"
+#include "SDImporter.h" // Used to retrive bmp images saved on SD card
 //#include "EEPROM.h"
 
 #define SCREEN_WIDTH 480
@@ -43,7 +44,8 @@ public:
     PanelGUI();
 
     void initGraphics();
-    void setDefaultBackground(uint16_t color);
+    void setDefaultBackgroundColor(uint16_t color);
+    void drawBitmap(int x, int y, String filename);
     
     void clearScreen();
     void updateScreen_d();

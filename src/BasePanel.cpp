@@ -1,5 +1,7 @@
 #include "BasePanel.h"
 
+
+// Intialize the BasePanel class by saving pointers to the Touch panel's touch (detection) and gui (drawing) classes
 BasePanel::BasePanel(PanelTouch* touch, PanelGUI* gui) 
 {
     this->touchObj = touch;
@@ -21,9 +23,10 @@ void BasePanel::update(){
             
         }
     }
-    else if(this->touchObj->getRelease()){ // True if button was just released
+    else if(this->touchObj->getRelease()){ // Check if a button has just been pressed and afterwards released to uncheck any selected buttons
     for(int i_btn = 0; i_btn < this->nButtons; i_btn++)
         buttons[i_btn].deSelect();
     }
+
 }
 

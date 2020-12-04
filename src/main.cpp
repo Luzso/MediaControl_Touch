@@ -11,7 +11,10 @@ PanelGUI* gui;
 MediaTouchPanel* mediaPlayerPanel = NULL;
 CalibrationPanel* calibrationPanel;
 
+bool firstRun = true;
+
 enum activepanel {
+    none,
     calibration,
     mediaplayer
 } panel;
@@ -19,14 +22,17 @@ enum activepanel {
 
 void startCalibration();
 void startMediaPlayer();
+void testBackgroundGraphics();
 
 void setup(){
+    Serial.begin(9600);
     touch = new PanelTouch();
     delay(100);
     gui = new PanelGUI();
 
-    
-    startupanimation::animateStartup(gui);
+    panel = none;
+
+    //startupanimation::animateStartup(gui);
     //startCalibration();
     //startMediaPlayer();
 
@@ -34,6 +40,14 @@ void setup(){
 }
 
 void loop(){
+    
+    
+    
+    if(touch->dataAvailable() && firstRun){
+        testBackgroundGraphics();
+        firstRun = false;
+    }
+
     
     switch(panel){
         case calibration:
@@ -47,7 +61,7 @@ void loop(){
         default:
             break;
     }
-    
+
 }
 
 void startMediaPlayer(){
@@ -63,3 +77,7 @@ void startCalibration(){
     calibrationPanel->startCalibration();
 }
 
+void testBackgroundGraphics(){
+    Serial.println("Testing background bmp graphics");
+    gui->drawBitmap(0, 0, "DEFAUL~1.BMP");
+}

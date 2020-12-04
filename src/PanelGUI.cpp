@@ -34,7 +34,7 @@ void PanelGUI::initGraphics(){
     this->setSaveFont(Arial_12_Bold);
     // Test
     this->monitor->setTextColor(ILI9488_CYAN);
-    this->setDefaultBackground(ILI9488_BLACK);
+    this->setDefaultBackgroundColor(ILI9488_BLACK);
     this->clearScreen();
 
 }
@@ -45,10 +45,19 @@ void PanelGUI::clearScreen(){
     this->updateScreen_d();
 }
 
-void PanelGUI::setDefaultBackground(uint16_t color){
+void PanelGUI::setDefaultBackgroundColor(uint16_t color){
 
     this->backgroundColor = color;
 
+}
+
+void PanelGUI::drawBitmap(int x, int y, String filename){
+    SDImporter sdImporter;
+    BMP bmp = sdImporter.getBitmapFile(&filename);
+
+    uint16_t palette[] = {ILI9488_RED, ILI9488_GREEN, ILI9488_BLUE};
+
+    this->monitor->writeRect8BPP(x, y, bmp.width, bmp.height, &bmp.data, palette);     
 }
 
 // BUTTON GRAPHICS

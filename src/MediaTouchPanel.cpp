@@ -27,16 +27,19 @@ void MediaTouchPanel::createButtons(){
 
 
 void MediaTouchPanel::onBtn_startPause(){
+    Serial.println("Media key pressed: Start/Pause");
     Keyboard.press(KEY_MEDIA_PLAY_PAUSE);
     Keyboard.release(KEY_MEDIA_PLAY_PAUSE);
 }
 
 void MediaTouchPanel::onBtn_next(){
+    Serial.println("Media key pressed: Next");
     Keyboard.press(KEY_MEDIA_NEXT_TRACK);
     Keyboard.release(KEY_MEDIA_NEXT_TRACK);
 }
 
 void MediaTouchPanel::onBtn_previous(){
+    Serial.println("Media key pressed: Previous");
     Keyboard.press(KEY_MEDIA_PREV_TRACK);
     Keyboard.release(KEY_MEDIA_PREV_TRACK);
 }
