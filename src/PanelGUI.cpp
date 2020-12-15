@@ -53,11 +53,35 @@ void PanelGUI::setDefaultBackgroundColor(uint16_t color){
 
 void PanelGUI::drawBitmap(int x, int y, String filename){
     SDImporter sdImporter;
-    BMP bmp = sdImporter.getBitmapFile(&filename);
+    BMP bmp = sdImporter.readBMPFile(&filename);
 
-    uint16_t palette[] = {ILI9488_RED, ILI9488_GREEN, ILI9488_BLUE};
+    uint16_t palette[bmp.nColors];
+    for(int idxColorOffset = 0; idxColorOffset < bmp.nColors; idxColorOffset++){
+        uint16_t tempColor = CL(bmp.colors[idxColorOffset*4 + 2], bmp.colors[idxColorOffset*4 + 0], bmp.colors[idxColorOffset*4 + 1]);
+        Serial.println("Saved color: " + String(tempColor) );
+        Serial.print(String(bmp.colors[idxColorOffset*4 + 2]) + ", " + String(bmp.colors[idxColorOffset*4 + 0]) + ", " + String(bmp.colors[idxColorOffset*4 + 1]) + "\n\n");
+        *(palette + idxColorOffset) = tempColor;
+    }
+    uint8_t pixelBuffer[BLOCK_SIZE];
 
-    this->monitor->writeRect8BPP(x, y, bmp.width, bmp.height, &bmp.data, palette);     
+    int idrow = 0;
+    int nRead = 0;
+    int iBlock = 0;
+    static int bytesPerRow = 480 * bmp.bitsPerPixel / 8;
+    while(bmp.file.available() > 0){
+
+        int nGetBytes = (BLOCK_SIZE / bytesPerRow) * bytesPerRow; // Find max number of rows that fits within buffer size.
+        
+        nRead = bmp.getChunk(pixelBuffer, nGetBytes);
+
+        int nRows = nRead / bytesPerRow; // Number of rows retrieved
+
+        Serial.println("Read n bytes: " + String(nRead));
+        this->monitor->writeRectNBPP(x, y + idrow , bmp.width, nRows, bmp.bitsPerPixel, pixelBuffer, palette);
+
+        idrow += nRows;
+    }
+    
 }
 
 // BUTTON GRAPHICS
