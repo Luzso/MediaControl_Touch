@@ -12,11 +12,9 @@ struct BMP
     File file;
     long currentRow = 0;
     long nBytes;
-    uint8_t* colors;
+    uint8_t gbrColors[256*4];
 
     ~BMP(){
-        if(colors != NULL)
-            delete colors;
     }
 
     void setWidth(long w){
@@ -38,18 +36,11 @@ struct BMP
 
     void setColors(uint8_t* u8colors, int nColorBytes){
 
-        for(int i = 0; i < nColorBytes; i++){
-            Serial.print(String(u8colors[i]) + " ");
-        }
-
-        this->colors = new uint8_t(nColorBytes);
+        this->gbrColors = new uint8_t(nColorBytes);
         for(int i_colorByte = 0; i_colorByte < nColorBytes; i_colorByte++){
-            this->colors[i_colorByte] = u8colors[i_colorByte];
+            this->gbrColors[i_colorByte] = u8colors[i_colorByte];
         }
 
-        for(int i = 0; i < nColorBytes; i++){
-            Serial.print(String(colors[i]) + " ");
-        }
     }
 
 

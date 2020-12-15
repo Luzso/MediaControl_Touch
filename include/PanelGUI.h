@@ -46,6 +46,7 @@ public:
     void initGraphics();
     void setDefaultBackgroundColor(uint16_t color);
     void drawBitmap(int x, int y, String filename);
+    void getColorsFromFile(BMP* bmpFile, uint16_t* rgbPalette);
     
     void clearScreen();
     void updateScreen_d();

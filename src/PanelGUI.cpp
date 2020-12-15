@@ -56,12 +56,7 @@ void PanelGUI::drawBitmap(int x, int y, String filename){
     BMP bmp = sdImporter.readBMPFile(&filename);
 
     uint16_t palette[bmp.nColors];
-    for(int idxColorOffset = 0; idxColorOffset < bmp.nColors; idxColorOffset++){
-        uint16_t tempColor = CL(bmp.colors[idxColorOffset*4 + 2], bmp.colors[idxColorOffset*4 + 0], bmp.colors[idxColorOffset*4 + 1]);
-        Serial.println("Saved color: " + String(tempColor) );
-        Serial.print(String(bmp.colors[idxColorOffset*4 + 2]) + ", " + String(bmp.colors[idxColorOffset*4 + 0]) + ", " + String(bmp.colors[idxColorOffset*4 + 1]) + "\n\n");
-        *(palette + idxColorOffset) = tempColor;
-    }
+    this->getColorsFromFile(&bmp, palette);
     uint8_t pixelBuffer[BLOCK_SIZE];
 
     int idrow = 0;
@@ -81,7 +76,15 @@ void PanelGUI::drawBitmap(int x, int y, String filename){
 
         idrow += nRows;
     }
-    
+}
+
+void PanelGUI::getColorsFromFile(BMP* bmpFile, uint16_t* rgbPalette){
+        for(int idxColorOffset = 0; idxColorOffset < bmpFile->nColors; idxColorOffset++){
+        uint16_t tempColor = CL(bmpFile->gbrColors[idxColorOffset*4 + 2], bmpFile->gbrColors[idxColorOffset*4 + 0], bmpFile->gbrColors[idxColorOffset*4 + 1]);
+        Serial.println("Saved color: " + String(tempColor) );
+        Serial.print(String(bmpFile->gbrColors[idxColorOffset*4 + 2]) + ", " + String(bmpFile->gbrColors[idxColorOffset*4 + 0]) + ", " + String(bmpFile->gbrColors[idxColorOffset*4 + 1]) + "\n\n");
+        *(rgbPalette + idxColorOffset) = tempColor;
+    }
 }
 
 // BUTTON GRAPHICS

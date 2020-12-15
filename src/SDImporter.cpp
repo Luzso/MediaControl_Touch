@@ -71,18 +71,13 @@ BMP SDImporter::readBMPFile(String* filename){
         // Color map
         // Get pointer to the colors
         int colorInfoNBytes = 4 * retBMP.nColors;
-        uint8_t colorInfoBf[colorInfoNBytes];
         if(retBMP.file.available() > 0){
             Serial.println("Reading color info.");
-            int nColorBytes = retBMP.file.readBytes(colorInfoBf, colorInfoNBytes);
+            int nColorBytes = retBMP.file.readBytes(retBMP.gbrColors, colorInfoNBytes); // Insert directly in array
             totalBytesRead += nColorBytes;
-            Serial.println("Read " + String(nColorBytes) + " bytes in total.");
-            for(int i = 0; i < nColorBytes; i++){
-                Serial.println(colorInfoBf[i]);
-            }
-            retBMP.setColors(colorInfoBf, nColorBytes);
-            
+            Serial.println("Read " + String(nColorBytes) + " bytes in total.");            
         }
+
 
         // Reset to beginning of data
         long nSkipAddresses = dataOffset - totalBytesRead;
