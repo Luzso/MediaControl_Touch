@@ -69,14 +69,25 @@ void PanelGUI::drawBitmap(int x, int y, String filename){
         
         nRead = bmp.getChunk(pixelBuffer, nGetBytes);
 
-        int nRows = nRead / bytesPerRow; // Number of rows retrieved
+        int nRowsRead = nRead / bytesPerRow; // Number of rows retrieved
 
+        uint8_t flippedBufferVertical[sizeof(pixelBuffer)];
+        // Reverse row order
+        for(int i_row = nRowsRead - 1; i_row > 0; i_row--){
+            memcpy(pixelBuffer + i_row * bmp.width, flippedBufferVertical + (nRowsRead - 1 - i_row) * bmp.width, sizeof(pixelBuffer[0]) * bmp.width) ;
+        }
+
+        this->monitor->writeRectNBPP(x, y + bmp.height - (nRowsRead + idrow), bmp.width, nRowsRead, bmp.bitsPerPixel, flippedBufferVertical, palette);
+
+        /*
         Serial.println("Read n bytes: " + String(nRead));
-        this->monitor->writeRectNBPP(x, y + idrow , bmp.width, nRows, bmp.bitsPerPixel, pixelBuffer, palette);
-
-        idrow += nRows;
+        this->monitor->writeRectNBPP(x, y + idrow , bmp.width, nRowsRead, bmp.bitsPerPixel, pixelBuffer, palette);
+*/
+        idrow += nRowsRead;
     }
 }
+
+
 
 void PanelGUI::getColorsFromFile(BMP* bmpFile, uint16_t* rgbPalette){
         for(int idxColorOffset = 0; idxColorOffset < bmpFile->nColors; idxColorOffset++){

@@ -18,7 +18,7 @@
             "svdPath": "C:/Users/rasmu/.platformio/platforms/teensy/misc/svd/MK66F18.svd",
             "preLaunchTask": {
                 "type": "PlatformIO",
-                "task": "Pre-Debug"
+                "task": "Pre-Debug (teensy36)"
             },
             "internalConsoleOptions": "openOnSessionStart"
         },

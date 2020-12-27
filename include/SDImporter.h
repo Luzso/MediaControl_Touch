@@ -34,15 +34,6 @@ struct BMP
         }
     }
 
-    void setColors(uint8_t* u8colors, int nColorBytes){
-
-        this->gbrColors = new uint8_t(nColorBytes);
-        for(int i_colorByte = 0; i_colorByte < nColorBytes; i_colorByte++){
-            this->gbrColors[i_colorByte] = u8colors[i_colorByte];
-        }
-
-    }
-
 
     int getChunk(uint8_t* buffer, int bufferSize){
 
