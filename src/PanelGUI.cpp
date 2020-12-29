@@ -1,4 +1,5 @@
 #include "PanelGUI.h"
+#include "MyTools.h"
 
 #define CS_PIN 21
 #define DC_PIN 20
@@ -52,35 +53,48 @@ void PanelGUI::setDefaultBackgroundColor(uint16_t color){
 }
 
 void PanelGUI::drawBitmap(int x, int y, String filename){
+
+    Serial.println("Drawing Bitmap");
+
     SDImporter sdImporter;
     BMP bmp = sdImporter.readBMPFile(&filename);
+    Serial.print("File size: " + String(sizeof(bmp.file)));
 
     uint16_t palette[bmp.nColors];
     this->getColorsFromFile(&bmp, palette);
-    uint8_t pixelBuffer[BLOCK_SIZE];
+    
+    uint8_t pixelBuffer[BLOCK_SIZE] = {};
+    uint8_t flippedBufferVertical[BLOCK_SIZE];
 
     int idrow = 0;
     int nRead = 0;
     int iBlock = 0;
     static int bytesPerRow = 480 * bmp.bitsPerPixel / 8;
     while(bmp.file.available() > 0){
-
-        int nGetBytes = (BLOCK_SIZE / bytesPerRow) * bytesPerRow; // Find max number of rows that fits within buffer size.
         
+        // Info on read data
+        int nGetBytes = (BLOCK_SIZE / bytesPerRow) * bytesPerRow; // Find max number of rows that fits within buffer size.
         nRead = bmp.getChunk(pixelBuffer, nGetBytes);
-
         int nRowsRead = nRead / bytesPerRow; // Number of rows retrieved
+        
+        Serial.println("Read n bytes1: " + String(nRead));
 
-        uint8_t flippedBufferVertical[sizeof(pixelBuffer)];
-        // Reverse row order
-        for(int i_row = nRowsRead - 1; i_row > 0; i_row--){
-            memcpy(pixelBuffer + i_row * bmp.width, flippedBufferVertical + (nRowsRead - 1 - i_row) * bmp.width, sizeof(pixelBuffer[0]) * bmp.width) ;
-        }
+        // Reverse row order since BMP file y-axis is flipped
+        int bufferSize = sizeof(pixelBuffer) / sizeof(pixelBuffer[0]);
+        Serial.println("nRows: " + String(nRowsRead));
+        
+        Serial.println("Read n bytes2: " + String(nRead));
+        
+        //tools::flipBufferVertical(pixelBuffer, flippedBufferVertical, nRowsRead, bmp.width, bmp.bitsPerPixel);
+        
+        Serial.println("Read n bytes3: " + String(nRead));
 
-        this->monitor->writeRectNBPP(x, y + bmp.height - (nRowsRead + idrow), bmp.width, nRowsRead, bmp.bitsPerPixel, flippedBufferVertical, palette);
+        // Draw image in block from the bottom and up
+        this->monitor->writeRectNBPP(x, y + bmp.height - (nRowsRead + idrow), bmp.width, nRowsRead, bmp.bitsPerPixel, pixelBuffer, palette);
+
+        Serial.println("Read n bytes4: " + String(nRead));
 
         /*
-        Serial.println("Read n bytes: " + String(nRead));
         this->monitor->writeRectNBPP(x, y + idrow , bmp.width, nRowsRead, bmp.bitsPerPixel, pixelBuffer, palette);
 */
         idrow += nRowsRead;
@@ -92,8 +106,8 @@ void PanelGUI::drawBitmap(int x, int y, String filename){
 void PanelGUI::getColorsFromFile(BMP* bmpFile, uint16_t* rgbPalette){
         for(int idxColorOffset = 0; idxColorOffset < bmpFile->nColors; idxColorOffset++){
         uint16_t tempColor = CL(bmpFile->gbrColors[idxColorOffset*4 + 2], bmpFile->gbrColors[idxColorOffset*4 + 0], bmpFile->gbrColors[idxColorOffset*4 + 1]);
-        Serial.println("Saved color: " + String(tempColor) );
-        Serial.print(String(bmpFile->gbrColors[idxColorOffset*4 + 2]) + ", " + String(bmpFile->gbrColors[idxColorOffset*4 + 0]) + ", " + String(bmpFile->gbrColors[idxColorOffset*4 + 1]) + "\n\n");
+        //Serial.println("Saved color: " + String(tempColor) );
+        //Serial.print(String(bmpFile->gbrColors[idxColorOffset*4 + 2]) + ", " + String(bmpFile->gbrColors[idxColorOffset*4 + 0]) + ", " + String(bmpFile->gbrColors[idxColorOffset*4 + 1]) + "\n\n");
         *(rgbPalette + idxColorOffset) = tempColor;
     }
 }
