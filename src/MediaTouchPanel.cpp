@@ -9,8 +9,11 @@ MediaTouchPanel::MediaTouchPanel(PanelTouch* touch, PanelGUI* gui)
 }
 
 void MediaTouchPanel::drawMainUI(){
+    /*
     int margin = 10;
-    this->guiObj->monitor->drawRect(margin, margin, SCREEN_WIDTH - margin, SCREEN_HEIGHT - margin, ILI9488_WHITE);
+    this->guiObj->monitor->drawRect(margin, margin, SCREEN_WIDTH - margin, SCREEN_HEIGHT - margin, ILI9488_WHITE);*/
+
+    this->guiObj->drawBitmap(0, 0, "DEFAUL~1.BMP");
 
 }
 
@@ -19,9 +22,9 @@ void MediaTouchPanel::drawMainUI(){
 void MediaTouchPanel::createButtons(){
     this->nButtons = 3;
     this->buttons = new Button[nButtons] {
-        Button(guiObj, &onBtn_startPause, &drawStartStopDS, &drawStartStopS, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 75, 75),
-        Button(guiObj, &onBtn_next, &drawStartStopDS, &drawStartStopS, SCREEN_WIDTH / 2 + 100, SCREEN_HEIGHT / 2, 75, 75),
-        Button(guiObj, &onBtn_previous, &drawStartStopDS, &drawStartStopS, SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2, 75, 75)}; // Add position and dimensions
+        Button(guiObj, &onBtn_startPause, &drawStartStopDeSelected, &drawStartStopSelected, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 75, 75),
+        Button(guiObj, &onBtn_next, &drawNextDeSelected, &drawNextSelected, SCREEN_WIDTH / 2 + 125, SCREEN_HEIGHT / 2, 75, 75),
+        Button(guiObj, &onBtn_previous, &drawPrevDeSelected, &drawPrevSelected, SCREEN_WIDTH / 2 - 125, SCREEN_HEIGHT / 2, 75, 75)}; // Add position and dimensions
 
 }
 

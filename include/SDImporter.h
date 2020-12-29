@@ -34,13 +34,36 @@ struct BMP
         }
     }
 
-
-    int getChunk(uint8_t* buffer, int bufferSize){
+    // Returns the number of rows that were read.
+    //
+    // buffer: The buffer array where the read data is stored
+    // bufferSizeBytes: The size of the buffer in bytes
+    // nBytesPerRow: How many bytes there are in each row
+    int getChunk(uint8_t* buffer, int bufferSizeBytes, int nBytesPerRow){
 
         if(this->file.available() > 0){
-            int nRead = file.readBytes(buffer, bufferSize);
-            Serial.println("In chunk, read bytes: " + String(nRead));
-            return nRead;
+            int nReadTotal = 0;
+            int nRowsRead = 0;
+            int nMaxRows = (bufferSizeBytes / nBytesPerRow);
+            int idrow = nMaxRows - 1;
+            // Read data rows and fill the buffer from the back, since the y-axis of the image is flipped
+            while(this->file.available() > 0 && nRowsRead <= nMaxRows && idrow >= 0){
+                int nRead = this->file.readBytes(buffer + idrow*nBytesPerRow, nBytesPerRow); // Read one row of bytes
+                nReadTotal += nRead;
+
+                if(nRead == nBytesPerRow)
+                    nRowsRead++;
+
+                idrow--;
+            }
+
+            // Move the data so that it starts at the beginning of the buffer
+            memcpy(buffer, buffer + ((idrow + 1)*nBytesPerRow), nReadTotal);
+
+            if(nRowsRead > 0)
+                return nReadTotal;
+            else 
+                return -1;
         }
         else{
             return -1;

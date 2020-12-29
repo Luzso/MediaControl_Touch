@@ -69,35 +69,27 @@ void PanelGUI::drawBitmap(int x, int y, String filename){
     int idrow = 0;
     int nRead = 0;
     int iBlock = 0;
-    static int bytesPerRow = 480 * bmp.bitsPerPixel / 8;
+    int bytesPerRow = bmp.width * bmp.bitsPerPixel / 8;
     while(bmp.file.available() > 0){
         
         // Info on read data
         int nGetBytes = (BLOCK_SIZE / bytesPerRow) * bytesPerRow; // Find max number of rows that fits within buffer size.
-        nRead = bmp.getChunk(pixelBuffer, nGetBytes);
-        int nRowsRead = nRead / bytesPerRow; // Number of rows retrieved
-        
-        Serial.println("Read n bytes1: " + String(nRead));
+        nRead = bmp.getChunk(pixelBuffer, nGetBytes, bytesPerRow);
 
-        // Reverse row order since BMP file y-axis is flipped
-        int bufferSize = sizeof(pixelBuffer) / sizeof(pixelBuffer[0]);
-        Serial.println("nRows: " + String(nRowsRead));
-        
-        Serial.println("Read n bytes2: " + String(nRead));
-        
-        //tools::flipBufferVertical(pixelBuffer, flippedBufferVertical, nRowsRead, bmp.width, bmp.bitsPerPixel);
-        
-        Serial.println("Read n bytes3: " + String(nRead));
+        if(nRead != -1){
+            int nRowsRead = nRead / bytesPerRow; // Number of rows retrieved
+            
+            Serial.println("Read n bytes: " + String(nRead));
 
-        // Draw image in block from the bottom and up
-        this->monitor->writeRectNBPP(x, y + bmp.height - (nRowsRead + idrow), bmp.width, nRowsRead, bmp.bitsPerPixel, pixelBuffer, palette);
+            // Reverse row order since BMP file y-axis is flipped
+            int bufferSize = sizeof(pixelBuffer) / sizeof(pixelBuffer[0]);
+            Serial.println("nRows: " + String(nRowsRead));
+       
+            // Draw image in block from the bottom and up
+            this->monitor->writeRectNBPP(x, y + bmp.height - (nRowsRead + idrow), bmp.width, nRowsRead, bmp.bitsPerPixel, pixelBuffer, palette);
 
-        Serial.println("Read n bytes4: " + String(nRead));
-
-        /*
-        this->monitor->writeRectNBPP(x, y + idrow , bmp.width, nRowsRead, bmp.bitsPerPixel, pixelBuffer, palette);
-*/
-        idrow += nRowsRead;
+            idrow += nRowsRead;
+        }
     }
 }
 
