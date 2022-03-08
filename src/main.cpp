@@ -32,8 +32,6 @@ void setup(){
 
     panel = none;
 
-    //startupanimation::animateStartup(gui);
-    //startCalibration();
     startMediaPlayer();
 
     delay(100);
@@ -41,13 +39,6 @@ void setup(){
 
 void loop(){
     
-    
-    /*
-    if(touch->dataAvailable() && firstRun){
-        testBackgroundGraphics();
-        firstRun = false;
-    }*/
-
     
     switch(panel){
         case calibration:
