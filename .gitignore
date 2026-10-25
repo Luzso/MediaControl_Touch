@@ -14,3 +14,7 @@
 .clang_complete
 .gcc-flags.json
 .pio
+# SquareLine generated exports and recovery archives
+/wSquareLine/build/
+/wSquareLine/autosave/
+/wSquareLine/backup/
